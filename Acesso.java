@@ -25,28 +25,53 @@ public class Acesso {
 		this.minutosEntrada = minutosEntrada;
 	}
 	
-	
-	public float calcularValor() { 
+	public int quantidadeHoras(){
 		int quantidadeHoras = horaSaida - horaEntrada; 
-		int quantidadeMinutos; 
+		
+		return quantidadeHoras;
+	}
+	
+	public boolean horaSaidaMaiorQueEntrada(){
+		
+		if (horaSaida > horaEntrada)
+			return true;
+		else return false;
+	}
+	
+	public boolean maisDeUmaHora(){
+		
+		if (horaSaidaMaiorQueEntrada() && minutosEntrada < minutosSaida)
+			return true;
+		else return false;
+	}
+	
+	public int quantidadeMinutos(){
+		int quantidadeHoras = quantidadeHoras();
+		int quantidadeMinutos;
 		
 		if (horaSaida == horaEntrada)
 			quantidadeMinutos = minutosSaida - minutosEntrada;
-		else if (horaSaida > horaEntrada && minutosEntrada == minutosSaida){
+		else if (horaSaidaMaiorQueEntrada() && minutosEntrada == minutosSaida){
 			quantidadeMinutos = 0;
-			quantidadeHoras = horaSaida - horaEntrada;
 		}
-		else if (horaSaida > horaEntrada && minutosEntrada > minutosSaida) 
+		else if (maisDeUmaHora()) 
 			quantidadeMinutos = minutosSaida - minutosEntrada;
-		else if (horaSaida > horaEntrada && minutosSaida < minutosEntrada){
+		else if (maisDeUmaHora()){
 			quantidadeMinutos = minutosSaida + (60 - minutosEntrada);
-			quantidadeHoras = horaSaida - horaEntrada - 1;
+			quantidadeHoras-= 1;
 		}
 		else {
 			quantidadeHoras = 0;
 			quantidadeMinutos = 0;
 		}
 		
+		return quantidadeMinutos;
+	}
+	
+	public float calcularValor() { 
+		int quantidadeHoras = quantidadeHoras();
+		int quantidadeMinutos = quantidadeMinutos(); 
+
 		float valorTotal = 0; 
 		valorTotal += quantidadeHoras * VALOR_HORA;
 		valorTotal += Math.ceil(quantidadeMinutos / 15.0) * VALOR_FRACAO;		
